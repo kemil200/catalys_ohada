@@ -82,6 +82,10 @@ def _poser_plan(company: str, chart_name: str) -> None:
     appelant ``create_charts()`` directement, on doit reprendre la seconde
     partie a notre charge : sans ``default_receivable_account`` ni
     ``default_payable_account``, la premiere facture echoue.
+
+    La trentaine d'autres champs de compte de la Company sont poses par
+    ``syscohada.defauts`` : ERPNext ne les renseigne que pour ses propres
+    plans, et leur absence ne se manifeste qu'a la premiere piece concernee.
     """
     from erpnext.accounts.doctype.account.chart_of_accounts.chart_of_accounts import (
         create_charts,
@@ -107,6 +111,10 @@ def _poser_plan(company: str, chart_name: str) -> None:
         )
         if compte:
             frappe.db.set_value("Company", company, champ, compte)
+
+    from catalys_ohada.syscohada.defauts import poser_defauts
+
+    poser_defauts(company)
 
 
 @frappe.whitelist()
