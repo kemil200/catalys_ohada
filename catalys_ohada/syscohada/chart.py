@@ -94,8 +94,16 @@ def _poser_plan(company: str, chart_name: str) -> None:
         ("default_receivable_account", "Receivable"),
         ("default_payable_account", "Payable"),
     ):
+        # Le tri est indispensable : ERPNext prend le premier venu, ce qui
+        # suffit sur son plan standard ou un seul compte porte le type. Le
+        # SYSCOHADA en compte huit par type (4111 a 4118, 4011 a 4018), et
+        # sans tri on tombe sur « Clients, degrevement de TVA » plutot que
+        # sur « Clients ». Le numero le plus bas est le compte principal.
         compte = frappe.db.get_value(
-            "Account", {"company": company, "account_type": type_compte, "is_group": 0}
+            "Account",
+            {"company": company, "account_type": type_compte, "is_group": 0},
+            "name",
+            order_by="account_number asc",
         )
         if compte:
             frappe.db.set_value("Company", company, champ, compte)
