@@ -1,0 +1,9 @@
+# Le depot est deploye sur Linux : on fige LF dans l'index et dans la copie
+# de travail, quel que soit le poste de developpement.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff binary
+*.woff2 binary
